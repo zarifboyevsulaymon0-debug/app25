@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Monitor PRO - IT Park Edition</title>
+    <style>
+        :root { --bg: #030712; --card: #111827; --accent: #10b981; --red: #ef4444; }
+        body { background: var(--bg); color: #f3f4f6; font-family: 'JetBrains Mono', monospace; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: var(--card); border: 1px solid #374151; border-radius: 12px; padding: 20px; }
+        .stat-val { font-size: 32px; font-weight: bold; color: var(--accent); margin: 10px 0; }
+        .progress-bar { background: #1f2937; height: 10px; border-radius: 5px; overflow: hidden; }
+        .fill { height: 100%; background: var(--accent); transition: 0.5s; }
+        .log-box { background: #000; height: 150px; overflow-y: auto; font-size: 12px; padding: 10px; color: #9ca3af; border-radius: 8px; }
+        .danger { color: var(--red); }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center; letter-spacing: 2px;">🖥️ SERVER MONITOR v2.0</h1>
+
+    <div class="grid">
+        <!-- CPU & RAM Status -->
+        <div class="card">
+            <h3>⚙️ System Load</h3>
+            <div id="cpuVal" class="stat-val">0%</div>
+            <div class="progress-bar"><div id="cpuFill" class="fill" style="width: 0%"></div></div>
+            <p style="font-size: 12px; margin-top: 10px;">RAM Usage: <span id="ramVal">0MB</span></p>
+        </div>
+
+        <!-- Network Traffic -->
+        <div class="card">
+            <h3>🌐 Network Traffic</h3>
+            <div id="netVal" class="stat-val" style="color: #3b82f6;">0.0 KB/s</div>
+            <canvas id="netChart" style="width: 100%; height: 50px;"></canvas>
+        </div>
+
+        <!-- Security Logs -->
+        <div class="card">
+            <h3>🛡️ Security Logs</h3>
+            <div class="log-box" id="logBox">
+                [SYSTEM]: Monitor ishga tushdi...<br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Simulyatsiya qilingan server ma'lumotlari (Junior mantiq)
+        function updateStats() {
+            // CPU Load
+            const cpu = Math.floor(Math.random() * 100);
+            document.getElementById('cpuVal').innerText = cpu + "%";
+            const fill = document.getElementById('cpuFill');
+            fill.style.width = cpu + "%";
+            fill.style.backgroundColor = cpu > 80 ? "#ef4444" : "#10b981";
+
+            // RAM usage
+            const ram = (Math.random() * 16).toFixed(1);
+            document.getElementById('ramVal').innerText = ram + "GB / 16GB";
+
+            // Network speed
+            const net = (Math.random() * 500).toFixed(1);
+            document.getElementById('netVal').innerText = net + " KB/s";
+
+            // Xavfsizlik loglari simulyatsiyasi
+            if(cpu > 90) {
+                addLog(`[ALERT]: Yuqori yuklama aniqlandi! (${cpu}%)`, true);
+            }
+        }
+
+        function addLog(msg, isDanger = false) {
+            const box = document.getElementById('logBox');
+            const time = new Date().toLocaleTimeString();
+            const logClass = isDanger ? 'class="danger"' : '';
+            box.innerHTML += `<span ${logClass}>[${time}] ${msg}</span><br>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // Har 2 soniyada yangilash
+        setInterval(updateStats, 2000);
+
+        // IT Park Al-Xorazmiy loyihasidagi o'quvchi sifatida log qo'shish
+        setTimeout(() => addLog("IT Park Al-Xorazmiy serveriga ulanish muvaffaqiyatli."), 1000);
+    </script>
+</body>
+</html>
